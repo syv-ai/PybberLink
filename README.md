@@ -152,6 +152,8 @@ if __name__ == '__main__':
     decoded_text = decode_signal_to_text(loaded_signal, pad_bytes=pad_len, rs_encoded_length=rs_length)
     print("Decoded text:", decoded_text)
 
+```
+
 ## Technical Details
 
 ### Protocol Parameters
