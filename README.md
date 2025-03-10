@@ -22,7 +22,7 @@ pip install pybberlink
 Or install from source:
 
 ```bash
-git clone https://github.com/yourusername/pybberlink.git
+git clone https://github.com/syv-ai/pybberlink.git
 cd pybberlink
 pip install -e .
 ```
@@ -112,18 +112,6 @@ The package includes unit tests to verify encoding and decoding functionality. R
 ```bash
 python -m unittest tests/test_encode_decode.py
 ```
-
-## License
-
-[Add your chosen license here]
-
-## Contributing
-
-[Add contribution guidelines here]
-
-## Authors
-
-- Mads Henrichsen (mads@syv.ai)
 
 ## Acknowledgments
 

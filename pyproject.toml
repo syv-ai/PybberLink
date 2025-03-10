@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pybberlink"
+version = "0.1.0"
+description = "A package to encode and decode text using the Gibberlink protocol."
+readme = "README.md"
+requires-python = ">=3.6"
+license = {file = "LICENSE"}
+authors = [
+    { name = "Mads Henrichsen", email = "mads@syv.ai" }
+]
+dependencies = [
+    "numpy",
+    "reedsolo",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+# Optional: include entry points if you want to provide command line tools
+[project.scripts]
+pybberlink-cli = "pybberlink.main:main"  # if you decide to add a main() for CLI usage
