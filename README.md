@@ -73,6 +73,85 @@ signal, pad_len, rs_encoded_length = encode_text_to_signal(
 )
 ```
 
+### Complete Example with WAV File I/O
+
+This example demonstrates how to encode text to an audio signal, save it to a WAV file, read it back, and decode it:
+
+```python
+import wave
+import numpy as np
+from pybberlink import encode_text_to_signal, decode_signal_to_text
+
+def save_to_wav(filename, signal, sample_rate=48000):
+    """
+    Save a NumPy array signal to a WAV file.
+    
+    Parameters:
+        filename (str): Path to the output WAV file.
+        signal (np.ndarray): 1-D NumPy array containing the audio signal (float values).
+        sample_rate (int): The sample rate used for the signal.
+    """
+    # Normalize signal to the range [-1, 1] if necessary
+    max_val = np.max(np.abs(signal))
+    if max_val > 0:
+        normalized_signal = signal / max_val
+    else:
+        normalized_signal = signal
+
+    # Convert the normalized float signal to 16-bit PCM format
+    int_signal = np.int16(normalized_signal * 32767)
+
+    # Write the data to a WAV file using the wave module
+    with wave.open(filename, 'wb') as wf:
+        wf.setnchannels(1)          # Mono audio
+        wf.setsampwidth(2)          # 16-bit samples = 2 bytes
+        wf.setframerate(sample_rate)
+        wf.writeframes(int_signal.tobytes())
+
+def read_from_wav(filename):
+    """
+    Read a WAV file and return the audio signal as a NumPy array along with its sample rate.
+    
+    Parameters:
+        filename (str): Path to the WAV file.
+    
+    Returns:
+        tuple: (signal (np.ndarray), sample_rate (int))
+    """
+    with wave.open(filename, 'rb') as wf:
+        sample_rate = wf.getframerate()
+        n_channels = wf.getnchannels()
+        sampwidth = wf.getsampwidth()
+        n_frames = wf.getnframes()
+        frames = wf.readframes(n_frames)
+        
+        # Assuming mono audio and 16-bit PCM format
+        signal = np.frombuffer(frames, dtype=np.int16).astype(np.float32)
+        # Convert back to float range [-1, 1]
+        signal = signal / 32767.0
+    
+    return signal, sample_rate
+
+# Example usage:
+if __name__ == '__main__':
+    text = """Hello world,
+    This is a test of the Gibberlink protocol.
+    It should be able to encode and decode text into an audio signal.
+    """
+    # Encode text into an audio signal
+    signal, pad_len, rs_length = encode_text_to_signal(text)
+    
+    # Save the signal to a WAV file
+    wav_filename = "output.wav"
+    save_to_wav(wav_filename, signal)
+    
+    # Later, read the signal back from the WAV file
+    loaded_signal, sr = read_from_wav(wav_filename)
+    
+    # Decode the loaded signal back into text
+    decoded_text = decode_signal_to_text(loaded_signal, pad_bytes=pad_len, rs_encoded_length=rs_length)
+    print("Decoded text:", decoded_text)
+
 ## Technical Details
 
 ### Protocol Parameters
